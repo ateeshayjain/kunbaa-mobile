@@ -36,7 +36,7 @@ export default function EventsScreen() {
             </View>
             <TouchableOpacity
               className="w-12 h-12 bg-primary rounded-full items-center justify-center"
-              style={({ pressed }: { pressed: boolean }) => ({ opacity: pressed ? 0.8 : 1 })}
+              activeOpacity={0.8}
             >
               <IconSymbol name="plus.circle.fill" size={28} color="#FFFFFF" />
             </TouchableOpacity>
@@ -50,7 +50,7 @@ export default function EventsScreen() {
                 <TouchableOpacity
                   key={event.id}
                   className="bg-surface rounded-xl p-4 border border-border"
-                  style={({ pressed }: { pressed: boolean }) => ({ opacity: pressed ? 0.7 : 1 })}
+                  activeOpacity={0.7}
                 >
                   <View className="flex-row items-center gap-3">
                     <View className="w-12 h-12 bg-primary/10 rounded-full items-center justify-center">
@@ -79,7 +79,7 @@ export default function EventsScreen() {
                 <TouchableOpacity
                   key={event.id}
                   className="bg-surface rounded-xl p-4 border border-border opacity-60"
-                  style={({ pressed }: { pressed: boolean }) => ({ opacity: pressed ? 0.5 : 0.6 })}
+                  activeOpacity={0.5}
                 >
                   <View className="flex-row items-center gap-3">
                     <View className="w-12 h-12 bg-muted/10 rounded-full items-center justify-center">
@@ -108,7 +108,7 @@ export default function EventsScreen() {
               </Text>
               <TouchableOpacity
                 className="bg-primary px-6 py-3 rounded-full"
-                style={({ pressed }: { pressed: boolean }) => ({ opacity: pressed ? 0.8 : 1 })}
+                activeOpacity={0.8}
               >
                 <Text className="text-white font-semibold">Create Event</Text>
               </TouchableOpacity>

@@ -30,7 +30,7 @@ export default function AlbumsScreen() {
             </View>
             <TouchableOpacity
               className="w-12 h-12 bg-primary rounded-full items-center justify-center"
-              style={({ pressed }: { pressed: boolean }) => ({ opacity: pressed ? 0.8 : 1 })}
+              activeOpacity={0.8}
             >
               <IconSymbol name="plus.circle.fill" size={28} color="#FFFFFF" />
             </TouchableOpacity>
@@ -43,7 +43,7 @@ export default function AlbumsScreen() {
                 <TouchableOpacity
                   key={album.id}
                   className="bg-surface rounded-xl overflow-hidden border border-border"
-                  style={({ pressed }: { pressed: boolean }) => ({ opacity: pressed ? 0.7 : 1 })}
+                  activeOpacity={0.7}
                 >
                   <View className="aspect-video bg-muted/10 items-center justify-center">
                     <IconSymbol name="photo.on.rectangle" size={48} color={colors.muted} />
@@ -72,7 +72,7 @@ export default function AlbumsScreen() {
               </Text>
               <TouchableOpacity
                 className="bg-primary px-6 py-3 rounded-full"
-                style={({ pressed }: { pressed: boolean }) => ({ opacity: pressed ? 0.8 : 1 })}
+                activeOpacity={0.8}
               >
                 <Text className="text-white font-semibold">Create Album</Text>
               </TouchableOpacity>

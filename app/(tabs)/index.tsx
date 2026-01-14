@@ -1,32 +1,36 @@
 import { ScrollView, Text, View, TouchableOpacity, RefreshControl } from "react-native";
 import { ScreenContainer } from "@/components/screen-container";
 import { useEffect, useState } from "react";
-import { getFamilyMembers, getEvents, getActivities, initializeSampleData } from "@/lib/storage";
-import type { FamilyMember, Event, Activity } from "@/lib/types";
+import { getAllMembers, initializeSampleFamilyTree } from "@/lib/family-tree";
+import { getEvents } from "@/lib/storage";
+import type { FamilyMember, Event } from "@/lib/types";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 import { useColors } from "@/hooks/use-colors";
 import { format } from "date-fns";
+import { useRouter } from "expo-router";
+import { getSuggestedActions } from "@/lib/kaka-ai";
 
 export default function HomeScreen() {
   const colors = useColors();
+  const router = useRouter();
   const [members, setMembers] = useState<FamilyMember[]>([]);
   const [events, setEvents] = useState<Event[]>([]);
-  const [activities, setActivities] = useState<Activity[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [refreshing, setRefreshing] = useState(false);
 
   const loadData = async () => {
     // Initialize sample data if needed
-    await initializeSampleData();
+    await initializeSampleFamilyTree();
     
-    const [loadedMembers, loadedEvents, loadedActivities] = await Promise.all([
-      getFamilyMembers(),
+    const [loadedMembers, loadedEvents, loadedSuggestions] = await Promise.all([
+      getAllMembers(),
       getEvents(),
-      getActivities(),
+      getSuggestedActions(),
     ]);
     
     setMembers(loadedMembers);
     setEvents(loadedEvents);
-    setActivities(loadedActivities);
+    setSuggestions(loadedSuggestions);
   };
 
   useEffect(() => {
@@ -42,6 +46,21 @@ export default function HomeScreen() {
   const upcomingEvents = events
     .filter(e => new Date(e.eventDate) > new Date())
     .sort((a, b) => new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime())
+    .slice(0, 3);
+
+  // Calculate upcoming birthdays
+  const upcomingBirthdays = members
+    .filter(m => m.dateOfBirth)
+    .map(m => {
+      const dob = new Date(m.dateOfBirth!);
+      const today = new Date();
+      const thisYearBday = new Date(today.getFullYear(), dob.getMonth(), dob.getDate());
+      if (thisYearBday < today) {
+        thisYearBday.setFullYear(today.getFullYear() + 1);
+      }
+      return { member: m, nextBirthday: thisYearBday };
+    })
+    .sort((a, b) => a.nextBirthday.getTime() - b.nextBirthday.getTime())
     .slice(0, 3);
 
   return (
@@ -61,25 +80,63 @@ export default function HomeScreen() {
 
           {/* Quick Stats */}
           <View className="flex-row gap-3">
-            <View className="flex-1 bg-surface rounded-2xl p-4 border border-border">
+            <TouchableOpacity 
+              className="flex-1 bg-surface rounded-2xl p-4 border border-border"
+              onPress={() => router.push('/(tabs)/tree')}
+              activeOpacity={0.7}
+            >
               <Text className="text-2xl font-bold text-foreground">{members.length}</Text>
               <Text className="text-sm text-muted mt-1">Family Members</Text>
-            </View>
-            <View className="flex-1 bg-surface rounded-2xl p-4 border border-border">
+            </TouchableOpacity>
+            <TouchableOpacity 
+              className="flex-1 bg-surface rounded-2xl p-4 border border-border"
+              onPress={() => router.push('/(tabs)/events')}
+              activeOpacity={0.7}
+            >
               <Text className="text-2xl font-bold text-foreground">{upcomingEvents.length}</Text>
               <Text className="text-sm text-muted mt-1">Upcoming Events</Text>
-            </View>
+            </TouchableOpacity>
           </View>
+
+          {/* Upcoming Birthdays */}
+          {upcomingBirthdays.length > 0 && (
+            <View className="gap-3">
+              <Text className="text-lg font-semibold text-foreground">🎂 Upcoming Birthdays</Text>
+              {upcomingBirthdays.map(({ member, nextBirthday }) => (
+                <TouchableOpacity
+                  key={member.id}
+                  className="bg-surface rounded-xl p-4 border border-border"
+                  onPress={() => router.push('/(tabs)/tree')}
+                  activeOpacity={0.7}
+                >
+                  <View className="flex-row items-center gap-3">
+                    <View className="w-12 h-12 bg-primary/10 rounded-full items-center justify-center">
+                      <IconSymbol name="person.fill" size={24} color={colors.primary} />
+                    </View>
+                    <View className="flex-1">
+                      <Text className="text-base font-semibold text-foreground">
+                        {member.firstName} {member.lastName || ''}
+                      </Text>
+                      <Text className="text-sm text-muted mt-1">
+                        {format(nextBirthday, 'MMM d')} • {format(nextBirthday, 'EEEE')}
+                      </Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
 
           {/* Upcoming Events */}
           {upcomingEvents.length > 0 && (
             <View className="gap-3">
-              <Text className="text-lg font-semibold text-foreground">Upcoming Events</Text>
+              <Text className="text-lg font-semibold text-foreground">📅 Upcoming Events</Text>
               {upcomingEvents.map((event) => (
                 <TouchableOpacity
                   key={event.id}
                   className="bg-surface rounded-xl p-4 border border-border"
-                  style={({ pressed }: { pressed: boolean }) => [{ opacity: pressed ? 0.7 : 1 }]}
+                  onPress={() => router.push('/(tabs)/events')}
+                  activeOpacity={0.7}
                 >
                   <View className="flex-row items-center gap-3">
                     <View className="w-12 h-12 bg-primary/10 rounded-full items-center justify-center">
@@ -97,17 +154,23 @@ export default function HomeScreen() {
             </View>
           )}
 
-          {/* Recent Activity */}
-          {activities.length > 0 && (
+          {/* AI Suggestions */}
+          {suggestions.length > 0 && (
             <View className="gap-3">
-              <Text className="text-lg font-semibold text-foreground">Recent Activity</Text>
-              {activities.slice(0, 5).map((activity) => (
-                <View key={activity.id} className="bg-surface rounded-xl p-4 border border-border">
-                  <Text className="text-sm text-foreground">{activity.activityText}</Text>
-                  <Text className="text-xs text-muted mt-2">
-                    {format(new Date(activity.createdAt), 'MMM d, h:mm a')}
-                  </Text>
-                </View>
+              <Text className="text-lg font-semibold text-foreground">💡 Suggested Actions</Text>
+              {suggestions.slice(0, 3).map((suggestion, index) => (
+                <TouchableOpacity
+                  key={index}
+                  className="bg-surface rounded-xl p-4 border border-border flex-row items-center"
+                  onPress={() => router.push('/(tabs)/chat')}
+                  activeOpacity={0.7}
+                >
+                  <View className="w-8 h-8 bg-primary/10 rounded-full items-center justify-center mr-3">
+                    <Text className="text-primary">✨</Text>
+                  </View>
+                  <Text className="flex-1 text-foreground">{suggestion}</Text>
+                  <IconSymbol name="chevron.right" size={16} color={colors.muted} />
+                </TouchableOpacity>
               ))}
             </View>
           )}
@@ -118,17 +181,19 @@ export default function HomeScreen() {
             <View className="flex-row gap-3">
               <TouchableOpacity
                 className="flex-1 bg-primary rounded-xl p-4 items-center"
-                style={({ pressed }: { pressed: boolean }) => [{ opacity: pressed ? 0.8 : 1 }]}
+                onPress={() => router.push('/(tabs)/tree')}
+                activeOpacity={0.8}
               >
                 <IconSymbol name="person.fill" size={24} color="#FFFFFF" />
-                <Text className="text-sm font-semibold text-white mt-2">Add Member</Text>
+                <Text className="text-sm font-semibold text-white mt-2">View Tree</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 className="flex-1 bg-primary rounded-xl p-4 items-center"
-                style={({ pressed }: { pressed: boolean }) => [{ opacity: pressed ? 0.8 : 1 }]}
+                onPress={() => router.push('/(tabs)/chat')}
+                activeOpacity={0.8}
               >
-                <IconSymbol name="calendar" size={24} color="#FFFFFF" />
-                <Text className="text-sm font-semibold text-white mt-2">Create Event</Text>
+                <Text className="text-2xl">🧓</Text>
+                <Text className="text-sm font-semibold text-white mt-2">Ask Kaka</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -144,9 +209,10 @@ export default function HomeScreen() {
               </Text>
               <TouchableOpacity
                 className="bg-primary px-6 py-3 rounded-full"
-                style={({ pressed }: { pressed: boolean }) => [{ opacity: pressed ? 0.8 : 1 }]}
+                onPress={() => router.push('/(tabs)/tree')}
+                activeOpacity={0.8}
               >
-                <Text className="text-background font-semibold">Add First Member</Text>
+                <Text className="text-white font-semibold">Add First Member</Text>
               </TouchableOpacity>
             </View>
           )}

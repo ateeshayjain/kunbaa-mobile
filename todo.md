@@ -19,7 +19,7 @@ Note: Using local AsyncStorage for mobile-first approach
 - [x] Interactive tree visualization component
 - [x] Member node component with profile photo
 - [ ] Zoom and pan gestures for tree navigation
-- [ ] Add new member form
+- [x] Add new member form
 - [ ] Edit member functionality
 - [x] Relationship management (parent, child, spouse, sibling)
 - [x] Generation tracking and display
@@ -102,3 +102,50 @@ Note: Using local AsyncStorage for mobile-first approach
 - [ ] Test on iOS and Android
 - [ ] Performance optimization
 - [ ] Accessibility improvements
+
+
+## Google Gemini AI Integration
+- [x] Request and configure Google Gemini API key
+- [x] Set up AI service integration in the app
+- [x] Implement AI-powered relationship suggestions
+- [x] Add AI assistant for family tree navigation
+
+## Advanced Family Tree Features
+- [x] Implement bidirectional relationship auto-linking
+- [x] Add "In-Law" propagation logic
+- [x] Create dynamic rooted tree view (Ego View)
+- [x] Implement tree re-rooting/focus navigation
+- [x] Add "View Tree" / "Focus" on member tap
+- [x] Create "Find Person" search functionality
+- [x] Add "Starting Point" prompt for tree view selection
+
+## Add Member Forms
+- [x] Create Add Parent form with auto-linking
+- [x] Create Add Spouse form with bidirectional link
+- [x] Create Add Sibling form with parent sharing prompt
+- [x] Create Add Child form
+- [x] Implement intelligent relationship type suggestions
+
+
+## Kaka AI - Actionable Features (High Impact)
+- [x] Natural language data entry parsing
+- [x] Pre-fill add member form from AI parsing
+- [ ] Smart reminder creation from chat
+- [x] Action confirmation dialogs
+- [x] Intent detection for CRUD operations
+
+## Kaka AI - Scalable Knowledge (RAG)
+- [x] Implement member embedding/indexing
+- [x] Context-aware member retrieval
+- [x] Relationship path computation for queries
+- [x] Support for 1000+ member families
+
+## Kaka AI - Visual Intelligence
+- [ ] Photo upload to chat
+- [ ] Member tagging suggestions
+- [ ] Photo search by description
+
+## Kaka AI - Narrative Generation
+- [x] Auto-generate member biographies
+- [x] Monthly family newsletter summary
+- [ ] Timeline event storytelling
