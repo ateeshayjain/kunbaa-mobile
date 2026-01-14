@@ -124,3 +124,21 @@ export interface Notification {
   isRead: boolean;
   createdAt: string;
 }
+
+
+export interface Recipe {
+  id: string;
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  prepTime?: number;
+  cookTime?: number;
+  servings?: number;
+  category?: string;
+  ingredients?: string[];
+  instructions?: string[];
+  contributedBy?: string;
+  isFavorite?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}

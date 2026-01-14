@@ -33,34 +33,34 @@ Note: Using local AsyncStorage for mobile-first approach
 - [ ] Contact quick actions (call, message)
 
 ## Core Features - Events Calendar
-- [ ] Calendar view component (month view)
-- [ ] Event list display
-- [ ] Event detail screen
-- [ ] Create event form
+- [x] Calendar view component (month view)
+- [x] Event list display
+- [x] Event detail screen
+- [x] Create event form
 - [ ] Edit/delete event functionality
-- [ ] Event categories and filtering
+- [x] Event categories and filtering
 - [ ] RSVP/attendance tracking
 - [ ] Event reminders and notifications
 
 ## Core Features - Photo Albums
-- [ ] Albums list screen
-- [ ] Album detail with photo grid
-- [ ] Photo upload functionality
-- [ ] Fullscreen photo viewer
+- [x] Albums list screen
+- [x] Album detail with photo grid
+- [x] Photo upload functionality
+- [x] Fullscreen photo viewer
 - [ ] Photo tagging (tag family members)
 - [ ] Photo comments and reactions
-- [ ] Album creation and management
+- [x] Album creation and management
 - [ ] Photo sharing
 
 ## Core Features - Chat
-- [ ] Conversation list screen
-- [ ] Chat message display
-- [ ] Send text messages
-- [ ] Real-time message updates
+- [x] Conversation list screen (Kaka AI)
+- [x] Chat message display
+- [x] Send text messages
+- [x] Real-time message updates
 - [ ] Message reactions
 - [ ] Group chat creation
 - [ ] Chat notifications
-- [ ] Typing indicators
+- [x] Typing indicators
 - [ ] Read receipts
 
 ## Home Dashboard
@@ -152,5 +152,5 @@ Note: Using local AsyncStorage for mobile-first approach
 
 
 ## GitHub Repository
-- [ ] Create new kunbaa-mobile repository on GitHub
-- [ ] Push all mobile app code to the repository
+- [x] Create new kunbaa-mobile repository on GitHub
+- [x] Push all mobile app code to the repository
