@@ -149,3 +149,8 @@ Note: Using local AsyncStorage for mobile-first approach
 - [x] Auto-generate member biographies
 - [x] Monthly family newsletter summary
 - [ ] Timeline event storytelling
+
+
+## GitHub Repository
+- [ ] Create new kunbaa-mobile repository on GitHub
+- [ ] Push all mobile app code to the repository
